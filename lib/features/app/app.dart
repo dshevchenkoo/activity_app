@@ -1,3 +1,5 @@
+import 'package:activity_app/assets/colors/colors.dart';
+import 'package:activity_app/assets/themes/text_style.dart';
 import 'package:activity_app/config/app_config.dart';
 import 'package:activity_app/config/debug_options.dart';
 import 'package:activity_app/config/environment/environment.dart';
@@ -58,6 +60,33 @@ class _AppState extends State<App> {
         /// This is for navigation.
         routeInformationParser: AppRouteInformationParser(),
         routerDelegate: AppRouterDelegate(_scope.coordinator),
+
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: primaryColor,
+          ),
+          inputDecorationTheme: const InputDecorationTheme(
+            hintStyle: TextStyle(color: textColorPrimary),
+            prefixStyle: TextStyle(color: textColorPrimary),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: .5,
+              ),
+            ),
+          ),
+          primaryColor: Colors.green,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              textStyle: MaterialStateProperty.all(
+                textMedium,
+              ),
+              foregroundColor: MaterialStateProperty.all<Color>(
+                Colors.white,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
