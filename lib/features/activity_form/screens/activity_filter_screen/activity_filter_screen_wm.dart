@@ -12,27 +12,27 @@ abstract class IActivityFilterScreenWidgetModel extends IWidgetModel {
   String get activityTooltip;
 
   /// Accessibility getter.
-  ListenableState<EntityState<double>> get accessibility;
+  ListenableState<EntityState<double>> get accessibilityState;
 
-  /// Count of dollars for big or small [price].
-  ListenableState<EntityState<int>> get dollarsCount;
+  /// Count of dollars for big or small [priceState].
+  ListenableState<EntityState<int>> get dollarsCountState;
 
   /// Price value.
-  ListenableState<EntityState<double>> get price;
+  ListenableState<EntityState<double>> get priceState;
 
-  /// Value of size for [dollarsCount].
-  ListenableState<EntityState<double>> get dollarsSize;
+  /// Value of size for [dollarsCountState].
+  ListenableState<EntityState<double>> get dollarsSizeState;
 
   /// Count of participants.
-  ListenableState<EntityState<int>> get participants;
+  ListenableState<EntityState<int>> get participantsState;
 
-  /// Callback function on remove [participants] element.
+  /// Callback function on remove [participantsState] element.
   Function()? get onRemoveParticipant;
 
-  /// Callback function on add [participants] element.
+  /// Callback function on add [participantsState] element.
   Function()? get onAddParticipant;
 
-  /// Percent of [accessibility].
+  /// Percent of [accessibilityState].
   int get accessibilityPercent;
 
   /// Text Controller for input activity category.
@@ -41,10 +41,10 @@ abstract class IActivityFilterScreenWidgetModel extends IWidgetModel {
   /// Show dialog for select category.
   void showActivityCategoryDialog();
 
-  /// Event by changed [accessibility] param.
+  /// Event by changed [accessibilityState] param.
   void onChangedAccessibility(double value);
 
-  /// Event by changed [price] param.
+  /// Event by changed [priceState] param.
   void onChangedPrice(double value);
 }
 
@@ -79,21 +79,23 @@ class ActivityFilterScreenWidgetModel
   String get activityTooltip => _activityTooltip;
 
   @override
-  ListenableState<EntityState<double>> get accessibility =>
+  ListenableState<EntityState<double>> get accessibilityState =>
       _accessibilityController;
 
   @override
-  ListenableState<EntityState<int>> get participants => _participantsController;
+  ListenableState<EntityState<int>> get participantsState =>
+      _participantsController;
 
   @override
-  ListenableState<EntityState<double>> get price => _priceController;
+  ListenableState<EntityState<double>> get priceState => _priceController;
 
   @override
-  ListenableState<EntityState<double>> get dollarsSize =>
+  ListenableState<EntityState<double>> get dollarsSizeState =>
       _dollarsSizeController;
 
   @override
-  ListenableState<EntityState<int>> get dollarsCount => _dollarsCountController;
+  ListenableState<EntityState<int>> get dollarsCountState =>
+      _dollarsCountController;
 
   @override
   Function()? get onRemoveParticipant =>
@@ -113,7 +115,8 @@ class ActivityFilterScreenWidgetModel
         };
 
   @override
-  int get accessibilityPercent => (accessibility.value!.data! * 100).toInt();
+  int get accessibilityPercent =>
+      (accessibilityState.value!.data! * 100).toInt();
 
   @override
   TextEditingController get activityCategoryTextController =>

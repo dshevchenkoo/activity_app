@@ -77,7 +77,7 @@ class ActivityFilterScreen
                   style: textRegular,
                 ),
                 EntityStateNotifierBuilder<double>(
-                  listenableEntityState: wm.accessibility,
+                  listenableEntityState: wm.accessibilityState,
                   builder: (_, state) => Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -97,7 +97,7 @@ class ActivityFilterScreen
                   style: textRegular,
                 ),
                 EntityStateNotifierBuilder<int>(
-                  listenableEntityState: wm.participants,
+                  listenableEntityState: wm.participantsState,
                   builder: (_, state) => Row(
                     children: [
                       IconButton(
@@ -133,9 +133,9 @@ class ActivityFilterScreen
                 ),
                 TripleSourceBuilder<EntityState<double>, EntityState<int>,
                     EntityState<double>>(
-                  firstSource: wm.price,
-                  secondSource: wm.dollarsCount,
-                  thirdSource: wm.dollarsSize,
+                  firstSource: wm.priceState,
+                  secondSource: wm.dollarsCountState,
+                  thirdSource: wm.dollarsSizeState,
                   builder: (_, price, dollarsCount, dollarsSize) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
