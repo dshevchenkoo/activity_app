@@ -26,6 +26,9 @@ abstract class IActivityFilterScreenWidgetModel extends IWidgetModel {
   /// Count of participants.
   ListenableState<EntityState<int>> get participantsState;
 
+  /// Text input state.
+  ListenableState<EntityState<String>> get activityCategoryState;
+
   /// Callback function on remove [participantsState] element.
   Function()? get onRemoveParticipant;
 
@@ -37,6 +40,12 @@ abstract class IActivityFilterScreenWidgetModel extends IWidgetModel {
 
   /// Text Controller for input activity category.
   TextEditingController get activityCategoryTextController;
+
+  /// Function when onPressed action.
+  void Function()? get next;
+
+  /// Function when onChanged ActivityCategory text field action.
+  void Function(String)? get onChangedActivityCategory;
 
   /// Show dialog for select category.
   void showActivityCategoryDialog();
@@ -74,6 +83,8 @@ class ActivityFilterScreenWidgetModel
       EntityStateNotifier<int>.value(0);
   final EntityStateNotifier<int> _participantsController =
       EntityStateNotifier<int>.value(1);
+  final EntityStateNotifier<String> _activityCategoryController =
+      EntityStateNotifier<String>.value('');
 
   @override
   String get activityTooltip => _activityTooltip;
@@ -96,6 +107,10 @@ class ActivityFilterScreenWidgetModel
   @override
   ListenableState<EntityState<int>> get dollarsCountState =>
       _dollarsCountController;
+
+  @override
+  ListenableState<EntityState<String>> get activityCategoryState =>
+      _activityCategoryController;
 
   @override
   Function()? get onRemoveParticipant =>
@@ -122,6 +137,16 @@ class ActivityFilterScreenWidgetModel
   TextEditingController get activityCategoryTextController =>
       _activityCategoryTextController;
 
+  @override
+  void Function()? get next =>
+      _activityCategoryTextController.text.isEmpty ? null : () {};
+
+  @override
+  void Function(String p1)? get onChangedActivityCategory => (value) {
+        _activityCategoryController
+            .content(_activityCategoryTextController.text);
+      };
+
   /// Create an instance [ActivityFilterScreenWidgetModel].
   ActivityFilterScreenWidgetModel(ActivityFilterScreenModel model)
       : super(model);
@@ -142,6 +167,7 @@ class ActivityFilterScreenWidgetModel
     _priceController.dispose();
     _dollarsSizeController.dispose();
     _dollarsCountController.dispose();
+    _activityCategoryController.dispose();
     super.dispose();
   }
 
@@ -156,6 +182,7 @@ class ActivityFilterScreenWidgetModel
     );
     _activityCategoryTextController.text =
         category?.map((e) => e.name).join(', ') ?? '';
+    _activityCategoryController.content(_activityCategoryTextController.text);
   }
 
   @override
