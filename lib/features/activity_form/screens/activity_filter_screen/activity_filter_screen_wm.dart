@@ -1,6 +1,8 @@
-import 'package:activity_app/features/activity_filter/screens/activity_filter_screen/activity_filter_screen.dart';
-import 'package:activity_app/features/activity_filter/screens/activity_filter_screen/activity_filter_screen_model.dart';
-import 'package:activity_app/features/activity_filter/screens/activity_filter_screen/widgets/activity_category_dialog.dart';
+import 'package:activity_app/features/activity_form/di/activity_form_scope.dart';
+import 'package:activity_app/features/activity_form/domain/entity/activity_category.dart';
+import 'package:activity_app/features/activity_form/screens/activity_filter_screen/activity_filter_screen.dart';
+import 'package:activity_app/features/activity_form/screens/activity_filter_screen/activity_filter_screen_model.dart';
+import 'package:activity_app/features/activity_form/screens/activity_filter_screen/widgets/activity_category_dialog.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +35,9 @@ abstract class IActivityFilterScreenWidgetModel extends IWidgetModel {
   /// Percent of [accessibility].
   int get accessibilityPercent;
 
+  /// Text Controller for input activity category.
+  TextEditingController get activityCategoryTextController;
+
   /// Show dialog for select category.
   void showActivityCategoryDialog();
 
@@ -47,7 +52,8 @@ abstract class IActivityFilterScreenWidgetModel extends IWidgetModel {
 ActivityFilterScreenWidgetModel defaultActivityFilterScreenModelFactory(
   BuildContext context,
 ) {
-  final model = ActivityFilterScreenModel();
+  final _scope = ActivityFormScope();
+  final model = ActivityFilterScreenModel(_scope.getActivityCategory);
   return ActivityFilterScreenWidgetModel(model);
 }
 
@@ -56,7 +62,8 @@ class ActivityFilterScreenWidgetModel
     extends WidgetModel<ActivityFilterScreen, ActivityFilterScreenModel>
     implements IActivityFilterScreenWidgetModel {
   late final String _activityTooltip;
-  late final List<String> _activityCategory;
+  late final List<ActivityCategory> _activityCategory;
+  late final TextEditingController _activityCategoryTextController;
   final EntityStateNotifier<double> _accessibilityController =
       EntityStateNotifier<double>.value(0.0);
   final EntityStateNotifier<double> _priceController =
@@ -108,19 +115,25 @@ class ActivityFilterScreenWidgetModel
   @override
   int get accessibilityPercent => (accessibility.value!.data! * 100).toInt();
 
+  @override
+  TextEditingController get activityCategoryTextController =>
+      _activityCategoryTextController;
+
   /// Create an instance [ActivityFilterScreenWidgetModel].
   ActivityFilterScreenWidgetModel(ActivityFilterScreenModel model)
       : super(model);
 
   @override
   void initWidgetModel() {
-    _activityCategory = _generateListActivityCategory().toList();
+    _activityCategoryTextController = TextEditingController();
+    _activityCategory = model.getActivityCategories();
     _activityTooltip =
-        '\nДоступные категории активности:\n${_activityCategory.map((el) => '• $el').join(';\n')}.\n';
+        '\nДоступные категории активности:\n${_activityCategory.map((el) => '• ${el.name}').join(';\n')}.\n';
   }
 
   @override
   void dispose() {
+    _activityCategoryTextController.dispose();
     _accessibilityController.dispose();
     _participantsController.dispose();
     _priceController.dispose();
@@ -131,15 +144,15 @@ class ActivityFilterScreenWidgetModel
 
   @override
   Future<void> showActivityCategoryDialog() async {
-    // TODO(dsh) exception
-    final List<ActivityCategory>? category =
-        await showDialog<List<ActivityCategory>?>(
+    final category = await showDialog<List<ActivityCategory>?>(
       useRootNavigator: false,
       context: context,
       builder: (_) {
         return ActivityCategoryDialog(_activityCategory);
       },
     );
+    _activityCategoryTextController.text =
+        category?.map((e) => e.name).join(', ') ?? '';
   }
 
   @override
@@ -156,40 +169,4 @@ class ActivityFilterScreenWidgetModel
     final dollarsSize = newValue * 20;
     _dollarsSizeController.content(dollarsSize);
   }
-
-  Iterable<String> _generateListActivityCategory() sync* {
-    for (final category in ActivityCategory.values) {
-      yield category.name;
-    }
-  }
-}
-
-/// Enum of [ActivityCategory].
-enum ActivityCategory {
-  /// Category education of [ActivityCategory].
-  education,
-
-  /// Category recreational of [ActivityCategory].
-  recreational,
-
-  /// Category social of [ActivityCategory].
-  social,
-
-  /// Category diy of [ActivityCategory].
-  diy,
-
-  /// Category charity of [ActivityCategory].
-  charity,
-
-  /// Category cooking of [ActivityCategory].
-  cooking,
-
-  /// Category relaxation of [ActivityCategory].
-  relaxation,
-
-  /// Category music of [ActivityCategory].
-  music,
-
-  /// Category busywork of [ActivityCategory].
-  busywork,
 }

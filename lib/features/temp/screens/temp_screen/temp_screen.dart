@@ -1,4 +1,4 @@
-import 'package:activity_app/features/activity_filter/screens/activity_filter_screen/activity_filter_screen.dart';
+import 'package:activity_app/features/activity_form/screens/activity_filter_screen/activity_filter_screen.dart';
 import 'package:activity_app/features/temp/screens/temp_screen/temp_screen_widget_model.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +13,6 @@ class TempScreen extends ElementaryWidget<TempScreenWidgetModel> {
 
   @override
   Widget build(TempScreenWidgetModel wm) {
-    return ActivityFilterScreen();
+    return const ActivityFilterScreen();
   }
 }

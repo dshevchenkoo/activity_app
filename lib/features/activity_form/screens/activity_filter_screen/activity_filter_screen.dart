@@ -1,6 +1,6 @@
 import 'package:activity_app/assets/colors/colors.dart';
 import 'package:activity_app/assets/themes/text_style.dart';
-import 'package:activity_app/features/activity_filter/screens/activity_filter_screen/activity_filter_screen_wm.dart';
+import 'package:activity_app/features/activity_form/screens/activity_filter_screen/activity_filter_screen_wm.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +36,8 @@ class ActivityFilterScreen
                   children: [
                     Expanded(
                       child: TextField(
+                        style: const TextStyle(color: white),
+                        controller: wm.activityCategoryTextController,
                         decoration: InputDecoration(
                           label: const Text(
                             'Категория активности',
