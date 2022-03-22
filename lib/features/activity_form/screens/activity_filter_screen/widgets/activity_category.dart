@@ -21,13 +21,12 @@ class ActivityCategoryBox extends StatelessWidget {
             Container(
               height: 64,
               width: 64,
+              alignment: Alignment.center,
               color: !activeCategory.isSelected
                   ? activeCategory.color
                   : Colors.white,
-              child: Center(
-                child: SvgPicture.asset(
-                  activeCategory.iconPath,
-                ),
+              child: SvgPicture.asset(
+                activeCategory.iconPath,
               ),
             ),
             const SizedBox(
