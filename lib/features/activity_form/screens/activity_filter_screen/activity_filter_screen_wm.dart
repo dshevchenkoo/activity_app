@@ -1,10 +1,14 @@
-import 'package:activity_app/features/activity_form/di/activity_form_scope.dart';
+import 'package:activity_app/features/activity_form/domain/dto/activity_params_dto.dart';
 import 'package:activity_app/features/activity_form/domain/entity/activity_category.dart';
 import 'package:activity_app/features/activity_form/screens/activity_filter_screen/activity_filter_screen.dart';
 import 'package:activity_app/features/activity_form/screens/activity_filter_screen/activity_filter_screen_model.dart';
 import 'package:activity_app/features/activity_form/screens/activity_filter_screen/widgets/activity_category_dialog.dart';
+import 'package:activity_app/features/app/di/app_scope.dart';
+import 'package:activity_app/features/navigation/domain/entity/app_coordinate.dart';
+import 'package:activity_app/features/navigation/service/coordinator.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// Interface of [ActivityFilterScreenWidgetModel].
 abstract class IActivityFilterScreenWidgetModel extends IWidgetModel {
@@ -61,9 +65,10 @@ abstract class IActivityFilterScreenWidgetModel extends IWidgetModel {
 ActivityFilterScreenWidgetModel defaultActivityFilterScreenModelFactory(
   BuildContext context,
 ) {
-  final _scope = ActivityFormScope();
-  final model = ActivityFilterScreenModel(_scope.getActivityCategory);
-  return ActivityFilterScreenWidgetModel(model);
+  final model = context.read<ActivityFilterScreenModel>();
+  final coordinator =
+      Provider.of<IAppScope>(context, listen: false).coordinator;
+  return ActivityFilterScreenWidgetModel(model, coordinator);
 }
 
 /// Default widget model for ActivityFilterScreenWidget
@@ -85,6 +90,8 @@ class ActivityFilterScreenWidgetModel
       EntityStateNotifier<int>.value(1);
   final EntityStateNotifier<String> _activityCategoryController =
       EntityStateNotifier<String>.value('');
+
+  late final Coordinator _coordinator;
 
   @override
   String get activityTooltip => _activityTooltip;
@@ -138,8 +145,30 @@ class ActivityFilterScreenWidgetModel
       _activityCategoryTextController;
 
   @override
-  void Function()? get next =>
-      _activityCategoryTextController.text.isEmpty ? null : () {};
+  void Function()? get next => _activityCategoryTextController.text.isEmpty
+      ? null
+      : () {
+          try {
+            _coordinator.navigate(
+              context,
+              AppCoordinate.activityScreen,
+              arguments: ActivityParamsDto(
+                price: _priceController.value!.data!,
+                accessibility: _accessibilityController.value!.data!,
+                participants: _participantsController.value!.data!,
+                activityCategories:
+                    _activityCategoryTextController.text.split(','),
+              ),
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Провертье правильность введенных данных"),
+              ),
+            );
+          }
+          // Navigator.of(context).pushNamed(routeName);
+        };
 
   @override
   void Function(String p1)? get onChangedActivityCategory => (value) {
@@ -148,8 +177,11 @@ class ActivityFilterScreenWidgetModel
       };
 
   /// Create an instance [ActivityFilterScreenWidgetModel].
-  ActivityFilterScreenWidgetModel(ActivityFilterScreenModel model)
-      : super(model);
+  ActivityFilterScreenWidgetModel(
+    ActivityFilterScreenModel model,
+    Coordinator coordinator,
+  )   : _coordinator = coordinator,
+        super(model);
 
   @override
   void initWidgetModel() {
@@ -181,7 +213,7 @@ class ActivityFilterScreenWidgetModel
       },
     );
     _activityCategoryTextController.text =
-        category?.map((e) => e.name).join(', ') ?? '';
+        category?.map((e) => e.name).join(',') ?? '';
     _activityCategoryController.content(_activityCategoryTextController.text);
   }
 

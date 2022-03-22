@@ -1,3 +1,5 @@
+import 'package:activity_app/features/activity/screens/activity_screen.dart';
+import 'package:activity_app/features/activity_form/domain/dto/activity_params_dto.dart';
 import 'package:activity_app/features/debug/screens/debug_screen/debug_screen.dart';
 import 'package:activity_app/features/navigation/domain/entity/coordinate.dart';
 import 'package:activity_app/features/temp/screens/temp_screen/temp_screen.dart';
@@ -9,6 +11,9 @@ class AppCoordinate implements Coordinate {
 
   /// Debug screens([DebugScreen]).
   static const debugScreen = AppCoordinate._('debug_screen');
+
+  /// Activity screen []
+  static const activityScreen = AppCoordinate._('activity_screen');
 
   /// Initialization screens(it can be any screens).
   static const initial = initScreen;
@@ -25,4 +30,7 @@ class AppCoordinate implements Coordinate {
 final Map<AppCoordinate, CoordinateBuilder> appCoordinates = {
   AppCoordinate.initial: (_, __) => const TempScreen(),
   AppCoordinate.debugScreen: (_, __) => const DebugScreen(),
+  AppCoordinate.activityScreen: (_, args) => ActivityScreen(
+        activityParams: args as ActivityParamsDto,
+      ),
 };
