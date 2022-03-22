@@ -23,6 +23,12 @@ class ActivityScreen extends ElementaryWidget<IActivityScreenWidgetModel> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('Новая активность'),
+        actions: [
+          IconButton(
+            onPressed: wm.onUpdatePressed,
+            icon: Icon(Icons.update),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(

@@ -8,6 +8,8 @@ import 'package:provider/src/provider.dart';
 abstract class IActivityScreenWidgetModel extends IWidgetModel {
   ListenableState<EntityState<List<Activity>>> get activityState;
 
+  void Function()? get onUpdatePressed;
+
   String getSvgPath(Activity activity);
 
   String price(Activity activity);
@@ -32,6 +34,11 @@ class ActivityWidgetModel
     _activityController = EntityStateNotifier();
     initActivity();
   }
+
+  @override
+  void Function()? get onUpdatePressed => () {
+        initActivity();
+      };
 
   @override
   String price(Activity activity) => "\$" * (activity.price * 5).toInt();
