@@ -1,4 +1,4 @@
-import 'package:activity_app/features/activity_form/data/repository/activity_repository_impl.dart';
+import 'package:activity_app/features/activity_form/data/repository/activity_form_repository_impl.dart';
 import 'package:activity_app/features/activity_form/data/storage/local_storage/activity_category_storage.dart';
 import 'package:activity_app/features/activity_form/domain/repository/activity_category_repository.dart';
 import 'package:activity_app/features/activity_form/domain/storage/local/activity_category_storage.dart';
@@ -11,7 +11,7 @@ class ActivityFormScope implements IActivityFormScope {
       GetActivityCategory(_activityCategoryRepository);
 
   ActivityCategoryRepository get _activityCategoryRepository =>
-      ActivityCategoryRepositoryImpl(_activityCategoryStorage);
+      ActivityFormCategoryRepositoryImpl(_activityCategoryStorage);
 
   ActivityCategoryStorage get _activityCategoryStorage =>
       ActivityCategoryLocalStorage();
