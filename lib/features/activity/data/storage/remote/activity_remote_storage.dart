@@ -15,21 +15,19 @@ class ActivityRemoteStorage implements ActivityStorage {
   });
 
   @override
-  Future<List<Activity>> fetchActivity(
-      {ActivityParamsDto? activityParams}) async {
-    List<Activity> result = [];
+  Future<List<Activity>> fetchActivity({
+    ActivityParamsDto? activityParams,
+  }) async {
+    final result = <Activity>[];
     final queryParameters = <String, dynamic>{
-      if (activityParams?.price != null) 'price': activityParams!.price,
-      if (activityParams?.accessibility != null)
-        'accessibility': activityParams?.accessibility,
-      if (activityParams?.participants != null)
-        'participants': activityParams?.participants,
-    };
+      'price': activityParams!.price,
+      'accessibility': activityParams.accessibility,
+      'participants': activityParams.participants,
+    }..removeWhere((key, dynamic value) => value == null);
 
-    for (var i = 0; i < activityParams!.activityCategories.length; i++) {
-      queryParameters['activityCategories'] =
-          activityParams.activityCategories[i];
-      var response = await dio.get<Map<String, dynamic>>(
+    for (final category in activityParams.activityCategories) {
+      queryParameters['activityCategories'] = category;
+      final response = await dio.get<Map<String, dynamic>>(
         ActivityModel.route,
         queryParameters: queryParameters,
       );

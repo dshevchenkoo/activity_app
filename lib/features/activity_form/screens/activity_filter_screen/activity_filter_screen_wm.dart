@@ -59,6 +59,8 @@ abstract class IActivityFilterScreenWidgetModel extends IWidgetModel {
 
   /// Event by changed [priceState] param.
   void onChangedPrice(double value);
+
+  void unfocus();
 }
 
 /// Factory for [ActivityFilterScreenModel].
@@ -231,4 +233,7 @@ class ActivityFilterScreenWidgetModel
     final dollarsSize = newValue * 20;
     _dollarsSizeController.content(dollarsSize);
   }
+
+  @override
+  void unfocus() => FocusManager.instance.primaryFocus?.unfocus();
 }
