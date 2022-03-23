@@ -19,6 +19,7 @@ class ActivityRemoteStorage implements ActivityStorage {
     ActivityParamsDto? activityParams,
   }) async {
     final result = <Activity>[];
+    final activityResponseList = <Future<Response<Map<String, dynamic>>>>[];
     final queryParameters = <String, dynamic>{
       'price': activityParams!.price,
       'accessibility': activityParams.accessibility,
@@ -27,16 +28,20 @@ class ActivityRemoteStorage implements ActivityStorage {
 
     for (final category in activityParams.activityCategories) {
       queryParameters['activityCategories'] = category;
-      final response = await dio.get<Map<String, dynamic>>(
+      activityResponseList.add(dio.get<Map<String, dynamic>>(
         ActivityModel.route,
         queryParameters: queryParameters,
-      );
-      if (response.data != null && response.data!['error'] != null) {
-        throw Exception(response.data!['error']);
-      }
-      result.add(ActivityModel.fromJson(response.data!));
+      ));
     }
 
-    return result;
+    final results = (await Future.wait(activityResponseList)).where((response) {
+      return response.data != null && response.data!['error'] == null;
+    });
+
+    if (results.isEmpty) {
+      throw Exception('Активность по выбранным параметрам не найдена');
+    } else {
+      return results.map((e) => ActivityModel.fromJson(e.data!)).toList();
+    }
   }
 }
