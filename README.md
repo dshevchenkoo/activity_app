@@ -1,8 +1,9 @@
 # Activity app
-
-<img width="436" alt="image" src="https://user-images.githubusercontent.com/21267045/159638472-f35d5258-f56c-45f1-9bea-0c5b0d937e2c.png">
-<img width="436" alt="image" src="https://user-images.githubusercontent.com/21267045/159638534-1f514f1a-eae3-4b41-a572-7ac3f3751bc8.png">
-<img width="436" alt="image" src="https://user-images.githubusercontent.com/21267045/159638632-0e3739cd-01bf-4b89-9aab-cb1f12a71fa3.png">
+<p float="left">
+<img width="320" alt="image" src="https://user-images.githubusercontent.com/21267045/159638472-f35d5258-f56c-45f1-9bea-0c5b0d937e2c.png">
+<img width="320" alt="image" src="https://user-images.githubusercontent.com/21267045/159638534-1f514f1a-eae3-4b41-a572-7ac3f3751bc8.png">
+<img width="320" alt="image" src="https://user-images.githubusercontent.com/21267045/159638632-0e3739cd-01bf-4b89-9aab-cb1f12a71fa3.png">
+</p>
 
 Приложение на основе surf-flutter-app-template и открытого api http://www.boredapi.com/documentation
 Версия flutter >= 2.5.0
