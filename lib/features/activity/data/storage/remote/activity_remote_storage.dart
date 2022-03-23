@@ -18,7 +18,6 @@ class ActivityRemoteStorage implements ActivityStorage {
   Future<List<Activity>> fetchActivity({
     ActivityParamsDto? activityParams,
   }) async {
-    final result = <Activity>[];
     final activityResponseList = <Future<Response<Map<String, dynamic>>>>[];
     final queryParameters = <String, dynamic>{
       'price': activityParams!.price,
@@ -27,7 +26,7 @@ class ActivityRemoteStorage implements ActivityStorage {
     }..removeWhere((key, dynamic value) => value == null);
 
     for (final category in activityParams.activityCategories) {
-      queryParameters['activityCategories'] = category;
+      queryParameters['type'] = category;
       activityResponseList.add(dio.get<Map<String, dynamic>>(
         ActivityModel.route,
         queryParameters: queryParameters,
