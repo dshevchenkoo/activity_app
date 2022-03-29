@@ -3,12 +3,12 @@ import 'package:activity_app/features/activity_form/domain/repository/activity_c
 import 'package:activity_app/features/activity_form/domain/storage/local/activity_category_storage.dart';
 
 /// Implementation [ActivityCategoryRepository]
-class ActivityCategoryRepositoryImpl implements ActivityCategoryRepository {
+class ActivityFormCategoryRepositoryImpl implements ActivityCategoryRepository {
   /// Activity category storage.
   final ActivityCategoryStorage activityCategoryStorage;
 
-  /// Create an instance [ActivityCategoryRepositoryImpl].
-  ActivityCategoryRepositoryImpl(this.activityCategoryStorage);
+  /// Create an instance [ActivityFormCategoryRepositoryImpl].
+  ActivityFormCategoryRepositoryImpl(this.activityCategoryStorage);
 
   @override
   List<ActivityCategoryModel> getActivityCategories() {
