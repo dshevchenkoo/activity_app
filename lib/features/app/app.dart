@@ -3,6 +3,12 @@ import 'package:activity_app/assets/themes/text_style.dart';
 import 'package:activity_app/config/app_config.dart';
 import 'package:activity_app/config/debug_options.dart';
 import 'package:activity_app/config/environment/environment.dart';
+import 'package:activity_app/core/util/default_error_handler.dart';
+import 'package:activity_app/features/activity/di/activity_scope.dart';
+import 'package:activity_app/features/activity/screens/activity_screen_model.dart';
+import 'package:activity_app/features/activity_form/di/activity_form_scope.dart';
+import 'package:activity_app/features/activity_form/screens/activity_filter_screen/activity_filter_screen.dart';
+import 'package:activity_app/features/activity_form/screens/activity_filter_screen/activity_filter_screen_model.dart';
 import 'package:activity_app/features/app/di/app_scope.dart';
 import 'package:activity_app/features/common/widgets/di_scope/di_scope.dart';
 import 'package:activity_app/features/navigation/domain/delegate/app_router_delegate.dart';
@@ -11,6 +17,7 @@ import 'package:activity_app/features/navigation/domain/parser/app_route_informa
 import 'package:activity_app/features/navigation/service/coordinator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 /// App widget.
 class App extends StatefulWidget {
@@ -40,49 +47,66 @@ class _AppState extends State<App> {
       factory: () {
         return _scope;
       },
-      child: MaterialApp.router(
-        /// Localization.
-        locale: _localizations.first,
-        localizationsDelegates: _localizationsDelegates,
-        supportedLocales: _localizations,
-
-        /// Debug configuration.
-        showPerformanceOverlay: _getDebugConfig().showPerformanceOverlay,
-        debugShowMaterialGrid: _getDebugConfig().debugShowMaterialGrid,
-        checkerboardRasterCacheImages:
-            _getDebugConfig().checkerboardRasterCacheImages,
-        checkerboardOffscreenLayers:
-            _getDebugConfig().checkerboardOffscreenLayers,
-        showSemanticsDebugger: _getDebugConfig().showSemanticsDebugger,
-        debugShowCheckedModeBanner:
-            _getDebugConfig().debugShowCheckedModeBanner,
-
-        /// This is for navigation.
-        routeInformationParser: AppRouteInformationParser(),
-        routerDelegate: AppRouterDelegate(_scope.coordinator),
-
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: primaryColor,
+      child: MultiProvider(
+        providers: [
+          Provider<ActivityScreenModel>(
+            create: (_) => ActivityScreenModel(
+              DefaultErrorHandler(),
+              ActivityScope(_scope.dio).fetchActivity,
+            ),
+            // child: const ActivityScreen(activityParams: null,),
           ),
-          inputDecorationTheme: const InputDecorationTheme(
-            hintStyle: TextStyle(color: textColorPrimary),
-            prefixStyle: TextStyle(color: textColorPrimary),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey,
-                width: .5,
+          Provider<ActivityFilterScreenModel>(
+            create: (_) => ActivityFilterScreenModel(
+              ActivityFormScope().getActivityCategory,
+            ),
+            child: const ActivityFilterScreen(),
+          ),
+        ],
+        child: MaterialApp.router(
+          /// Localization.
+          locale: _localizations.first,
+          localizationsDelegates: _localizationsDelegates,
+          supportedLocales: _localizations,
+
+          /// Debug configuration.
+          showPerformanceOverlay: _getDebugConfig().showPerformanceOverlay,
+          debugShowMaterialGrid: _getDebugConfig().debugShowMaterialGrid,
+          checkerboardRasterCacheImages:
+              _getDebugConfig().checkerboardRasterCacheImages,
+          checkerboardOffscreenLayers:
+              _getDebugConfig().checkerboardOffscreenLayers,
+          showSemanticsDebugger: _getDebugConfig().showSemanticsDebugger,
+          debugShowCheckedModeBanner:
+              _getDebugConfig().debugShowCheckedModeBanner,
+
+          /// This is for navigation.
+          routeInformationParser: AppRouteInformationParser(),
+          routerDelegate: AppRouterDelegate(_scope.coordinator),
+
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSwatch().copyWith(
+              primary: primaryColor,
+            ),
+            inputDecorationTheme: const InputDecorationTheme(
+              hintStyle: TextStyle(color: textColorPrimary),
+              prefixStyle: TextStyle(color: textColorPrimary),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey,
+                  width: .5,
+                ),
               ),
             ),
-          ),
-          primaryColor: Colors.green,
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-              textStyle: MaterialStateProperty.all(
-                textMedium,
-              ),
-              foregroundColor: MaterialStateProperty.all<Color>(
-                Colors.white,
+            primaryColor: Colors.green,
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                textStyle: MaterialStateProperty.all(
+                  textMedium,
+                ),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  Colors.white,
+                ),
               ),
             ),
           ),

@@ -16,7 +16,7 @@ class ActivityFilterScreen
   @override
   Widget build(IActivityFilterScreenWidgetModel wm) {
     return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      onTap: () => wm.unfocus(),
       child: Scaffold(
         backgroundColor: textColorGrey,
         body: SafeArea(
