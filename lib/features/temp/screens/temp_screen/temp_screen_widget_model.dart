@@ -16,6 +16,14 @@ class TempScreenWidgetModel extends WidgetModel<TempScreen, TempScreenModel>
     implements IDebugWidgetModel {
   /// Create an instance [TempScreenWidgetModel].
   TempScreenWidgetModel(TempScreenModel model) : super(model);
+
+  // late final IActivityFormScope _scope;
+
+  @override
+  void initWidgetModel() {
+    // _scope = ActivityFormScope();
+    super.initWidgetModel();
+  }
 }
 
 /// Interface of [TempScreenWidgetModel].

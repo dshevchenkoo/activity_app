@@ -2,8 +2,9 @@ import 'dart:ui';
 
 import 'package:activity_app/config/app_config.dart';
 import 'package:activity_app/config/environment/environment.dart';
+import 'package:activity_app/core/util/default_error_handler.dart';
+import 'package:activity_app/features/activity_form/di/activity_form_scope.dart';
 import 'package:activity_app/features/navigation/service/coordinator.dart';
-import 'package:activity_app/util/default_error_handler.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:elementary/elementary.dart';
@@ -14,6 +15,7 @@ class AppScope implements IAppScope {
   late final ErrorHandler _errorHandler;
   late final VoidCallback _applicationRebuilder;
   late final Coordinator _coordinator;
+  late final ActivityFormScope _activityFormScope;
 
   @override
   Dio get dio => _dio;
@@ -27,6 +29,9 @@ class AppScope implements IAppScope {
   @override
   Coordinator get coordinator => _coordinator;
 
+  @override
+  IActivityFormScope get activityFormScope => _activityFormScope;
+
   /// Create an instance [AppScope].
   AppScope({
     required VoidCallback applicationRebuilder,
@@ -37,6 +42,7 @@ class AppScope implements IAppScope {
     _dio = _initDio(additionalInterceptors);
     _errorHandler = DefaultErrorHandler();
     _coordinator = Coordinator();
+    _activityFormScope = ActivityFormScope();
   }
 
   Dio _initDio(Iterable<Interceptor> additionalInterceptors) {
@@ -88,4 +94,7 @@ abstract class IAppScope {
 
   /// Class that coordinates navigation for the whole app.
   Coordinator get coordinator;
+
+  /// class dependencies for form screen.
+  IActivityFormScope get activityFormScope;
 }
